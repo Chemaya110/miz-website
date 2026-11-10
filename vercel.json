@@ -1,0 +1,3 @@
+{
+  "functions": { "api/visualize.js": { "maxDuration": 60 } }
+}
