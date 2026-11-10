@@ -77,27 +77,50 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:co
 @media (max-width:880px){ .nav-links{display:none} }
 @media (max-width:520px){ .strip span:nth-child(n+3){display:none} .brand span{font-size:16px} .nav .btn-gold{display:none} .nav-call{display:inline-flex} }
 
-/* hero */
-.hero{padding-block:clamp(48px,7vw,88px) 0;position:relative;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:end}
-.hero h1{font-size:clamp(44px,7.4vw,92px);margin-top:18px}
+/* hero slideshow */
+.hero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;min-height:clamp(560px,84vh,880px);padding-block:0;background:#0f0e0c;
+  --gold:#cfa75e;--gold-hi:#e6c88d;--on-gold:#17140d;--fg:#f6f1e8;--muted:#ddd3c2;--line:rgba(246,241,232,.32);--surface:rgba(15,14,12,.45);color:var(--fg)}
+.slides{position:absolute;inset:0}
+.slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity 1.6s ease}
+.slide.is-on{opacity:1;z-index:1}
+.slide img{display:block;width:100%;height:100%;max-width:100%;object-fit:cover;transform:scale(1.03)}
+.slide.is-on img{animation:kb2 7.5s linear both}
+@keyframes kb2{from{transform:scale(1.03)}to{transform:scale(1.13)}}
+.hero-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(10,9,7,.84) 0%,rgba(10,9,7,.58) 42%,rgba(10,9,7,.08) 78%),linear-gradient(0deg,rgba(10,9,7,.75) 0%,transparent 42%)}
+.hero-inner,.hero-meta{position:relative;z-index:3;width:100%}
+.hero-inner{padding-block:clamp(96px,14vh,160px) 34px}
+.hero-copy{max-width:720px}
+.hero h1{font-size:clamp(46px,7.6vw,100px);margin-top:18px;text-shadow:0 2px 30px rgba(0,0,0,.35)}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero-lead{color:var(--muted);font-size:clamp(16px,1.6vw,19px);max-width:46ch;margin-top:22px}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.switch{display:grid;gap:10px;justify-self:end;width:100%;max-width:380px}
-.switch-label{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:var(--r);padding:12px 14px;text-align:left;cursor:pointer;font:500 14px/1.2 var(--body);display:grid;gap:4px;transition:border-color .2s}
-.chip small{font:400 11px/1.2 var(--mono);color:var(--muted)}
+.hero .btn-ghost{background:rgba(15,14,12,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hero .teaser{background:rgba(15,14,12,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hero-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-block:0 26px}
+.slide-cap{font:500 12px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg);display:flex;align-items:center;gap:10px}
+.slide-cap::before{content:"";width:26px;height:1px;background:var(--gold)}
+.bars{display:flex;gap:6px}
+.bar{appearance:none;position:relative;width:38px;height:22px;padding:0;border:0;background:transparent;cursor:pointer}
+.bar::before,.bar::after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;border-radius:2px}
+.bar::before{background:rgba(246,241,232,.3)}
+.bar::after{background:var(--gold-hi);transform-origin:left;transform:scaleX(0)}
+.bar.is-on::after{animation:fill 6s linear both}
+.hero.paused .bar.is-on::after{animation:none;transform:none}
+@keyframes fill{to{transform:scaleX(1)}}
+@media (max-width:640px){ .hero{min-height:620px} .hero-shade{background:linear-gradient(0deg,rgba(10,9,7,.88) 0%,rgba(10,9,7,.55) 60%,rgba(10,9,7,.25) 100%)} .bar{width:26px} }
+
+/* material band */
+.matband{background:var(--surface);border-bottom:1px solid var(--line)}
+.matband .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-block:18px}
+.matband .switch-label{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.matband .chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:10px 16px;cursor:pointer;font:500 14px/1.2 var(--body);transition:border-color .2s}
+.chip small{display:none}
 .chip[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
 .chip:hover{border-color:var(--gold)}
-.stage{position:relative;margin-top:40px}
-.stage figure{margin:0;position:relative;border-radius:var(--r);overflow:hidden;background:var(--surface-2)}
-.stage img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:21/9;object-fit:cover;transition:opacity .35s ease}
-.stage figure::after{content:"";position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(transparent,rgba(10,9,7,.55));pointer-events:none}
-.stage-tag{position:absolute;left:20px;bottom:18px;z-index:2;font:500 12px/1.4 var(--mono);color:#f3eee5;background:rgba(15,14,12,.62);padding:8px 12px;border-radius:4px;letter-spacing:.04em}
-@media (max-width:640px){ .stage img{aspect-ratio:4/3} }
-@media (max-width:820px){ .hero-grid{grid-template-columns:1fr} .switch{justify-self:start;max-width:none} }
+#v-mats .chip{border-radius:var(--r);text-align:left;display:grid;gap:4px;padding:12px 14px;background:var(--surface)}
+#v-mats .chip small{display:block;font:400 11px/1.2 var(--mono);color:var(--muted)}
+#v-mats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
 /* strip */
 .strip{border-block:1px solid var(--line);background:var(--surface)}
@@ -236,10 +259,9 @@ footer p{font-size:13px;color:var(--muted)}
 @keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 55%,transparent)}50%{box-shadow:0 0 0 8px transparent}}
 .hero .w{display:inline-block;animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0) * 80ms)}
-.hero .eyebrow,.hero-lead,.hero-ctas,.teaser,.switch{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
-.hero-lead{animation-delay:.45s}.hero-ctas{animation-delay:.55s}.teaser{animation-delay:.65s}.switch{animation-delay:.6s}
+.hero .eyebrow,.hero-lead,.hero-ctas,.teaser{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.hero-lead{animation-delay:.45s}.hero-ctas{animation-delay:.55s}.teaser{animation-delay:.65s}
 .hero h1 em{background:linear-gradient(100deg,var(--gold) 40%,var(--gold-hi) 50%,var(--gold) 60%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s ease-in-out infinite}
-.stage img{animation:kb 26s ease-in-out infinite alternate}
 .card{transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .3s}
 .card img{transition:transform 1s cubic-bezier(.2,.7,.2,1)}
 .card:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--gold) 60%,var(--line))}
@@ -357,9 +379,20 @@ footer p{font-size:13px;color:var(--muted)}
 </header>
 
 <main id="top">
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
+  <section class="hero" id="hero" aria-roledescription="carousel" aria-label="Featured floors">
+    <div class="slides" id="slides">
+      <figure class="slide is-on" data-mat="porcelain" data-cap="Large-format porcelain · Ocean-view living"><img src="s-ocean.jpg" alt="Ocean-view living room with glossy marble-look porcelain floor" width="1600" height="900"></figure>
+      <figure class="slide" data-mat="lvt" data-cap="LVT · Natural oak plank"><img src="s-oak.jpg" alt="Bright empty room with oak-look luxury vinyl plank" width="1600" height="900"></figure>
+      <figure class="slide" data-mat="porcelain" data-cap="Porcelain · White marble-look kitchen"><img src="s-kitchen.jpg" alt="Modern kitchen with white marble-look porcelain floor" width="1600" height="900" loading="lazy"></figure>
+      <figure class="slide" data-mat="wood" data-cap="Engineered wood · Warm oak living"><img src="s-wood.jpg" alt="Living and dining area with warm engineered wood floor" width="1600" height="900" loading="lazy"></figure>
+      <figure class="slide" data-mat="porcelain" data-cap="Stone-look tile · Sea-view living"><img src="s-seaview.jpg" alt="Living room with stone-look tile floor and sea view" width="1600" height="900" loading="lazy"></figure>
+      <figure class="slide" data-mat="spc" data-cap="SPC · Weathered grey plank"><img src="s-spc.jpg" alt="Open room with grey wood-look SPC plank floor" width="1600" height="900" loading="lazy"></figure>
+      <figure class="slide" data-mat="porcelain" data-cap="Polished tile · Commercial lobby"><img src="s-lobby.jpg" alt="Hotel lobby with polished tile floor" width="1600" height="900" loading="lazy"></figure>
+      <figure class="slide" data-mat="porcelain" data-cap="Porcelain · Large-format slate look"><img src="s-porcelain.jpg" alt="Living room with dark large-format porcelain tile" width="1600" height="900" loading="lazy"></figure>
+    </div>
+    <div class="hero-shade"></div>
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
         <p class="eyebrow">Flooring sales &amp; installation · Miami, FL</p>
         <h1><span class="w">Floors</span> <span class="w" style="--d:1">that</span> <span class="w" style="--d:2"><em>finish</em></span> <span class="w" style="--d:3">the</span> <span class="w" style="--d:4">room.</span></h1>
         <p class="hero-lead">We supply and install luxury vinyl, SPC, porcelain and engineered wood for Miami homes and businesses, and we handle the remodeling around them.</p>
@@ -372,20 +405,24 @@ footer p{font-size:13px;color:var(--muted)}
         </div>
         <a class="teaser" href="#visualize"><b><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>New</b>See any floor in your own room with AI →</a>
       </div>
-      <div class="switch">
-        <span class="switch-label" id="sw-label">Preview a floor</span>
-        <div class="chips" role="group" aria-labelledby="sw-label">
-          <button class="chip" data-mat="lvt" aria-pressed="true">LVT<small>Luxury vinyl tile</small></button>
-          <button class="chip" data-mat="spc" aria-pressed="false">SPC<small>Stone plastic composite</small></button>
-          <button class="chip" data-mat="porcelain" aria-pressed="false">Porcelain<small>Large-format tile</small></button>
-          <button class="chip" data-mat="wood" aria-pressed="false">Engineered wood<small>Real wood veneer</small></button>
-        </div>
-      </div>
     </div>
-    <div class="stage">
-      <div class="wrap"><figure><img id="floor" src="lvt.jpg" alt="Room finished with oak-look luxury vinyl plank" width="1400" height="934"><figcaption class="stage-tag" id="stage-tag">LVT · oak-look plank</figcaption></figure></div>
+    <div class="wrap hero-meta">
+      <p class="slide-cap" id="slide-cap" aria-live="polite">Large-format porcelain · Ocean-view living</p>
+      <div class="bars" id="bars"><button class="bar is-on" type="button" aria-label="Show photo 1"></button><button class="bar" type="button" aria-label="Show photo 2"></button><button class="bar" type="button" aria-label="Show photo 3"></button><button class="bar" type="button" aria-label="Show photo 4"></button><button class="bar" type="button" aria-label="Show photo 5"></button><button class="bar" type="button" aria-label="Show photo 6"></button><button class="bar" type="button" aria-label="Show photo 7"></button><button class="bar" type="button" aria-label="Show photo 8"></button></div>
     </div>
   </section>
+
+  <div class="matband">
+    <div class="wrap">
+      <span class="switch-label" id="sw-label">Preview a floor</span>
+      <div class="chips" role="group" aria-labelledby="sw-label">
+        <button class="chip" data-mat="lvt" aria-pressed="false">LVT</button>
+        <button class="chip" data-mat="spc" aria-pressed="false">SPC</button>
+        <button class="chip" data-mat="porcelain" aria-pressed="true">Porcelain</button>
+        <button class="chip" data-mat="wood" aria-pressed="false">Engineered wood</button>
+      </div>
+    </div>
+  </div>
 
   <div class="strip">
     <div class="wrap">
@@ -651,16 +688,28 @@ const MATS={
 };
 const ORDER=["lvt","spc","porcelain","wood"];
 
-// ---------- hero ----------
-const floor=document.getElementById("floor"),tag=document.getElementById("stage-tag");
-const chips=[...document.querySelectorAll(".chip")];
-function setMat(m){
-  chips.forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.mat===m)));
-  const go=()=>{floor.src=MATS[m].img;floor.alt=MATS[m].alt;tag.textContent=MATS[m].tag;floor.style.opacity=1};
-  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return go();
-  floor.style.opacity=.2;setTimeout(go,200);
+// ---------- hero slideshow ----------
+const hero=document.getElementById("hero");
+const slides=[...hero.querySelectorAll(".slide")],bars=[...hero.querySelectorAll(".bar")];
+const chips=[...document.querySelectorAll(".matband .chip")];
+const CHIP_SLIDE={porcelain:0,lvt:1,wood:3,spc:5};
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+let cur=0,timer=null;
+function restart(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls)}
+function show(i){
+  slides[cur].classList.remove("is-on");bars[cur].classList.remove("is-on");
+  cur=(i+slides.length)%slides.length;
+  restart(slides[cur],"is-on");restart(bars[cur],"is-on");
+  document.getElementById("slide-cap").textContent=slides[cur].dataset.cap;
+  bars.forEach((b,j)=>b.setAttribute("aria-current",String(j===cur)));
+  const m=slides[cur].dataset.mat;chips.forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.mat===m)));
 }
+function play(){clearInterval(timer);if(reduce){hero.classList.add("paused");return}hero.classList.remove("paused");timer=setInterval(()=>show(cur+1),6000)}
+bars.forEach((b,j)=>b.addEventListener("click",()=>{show(j);play()}));
+document.addEventListener("visibilitychange",()=>{if(document.hidden){clearInterval(timer)}else play()});
+function setMat(m){show(CHIP_SLIDE[m]);play()}
 chips.forEach(c=>c.addEventListener("click",()=>setMat(c.dataset.mat)));
+play();
 
 // ---------- cards ----------
 const cards=document.getElementById("cards");
