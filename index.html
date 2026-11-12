@@ -642,6 +642,7 @@ footer p{font-size:13px;color:var(--muted)}
           <div id="qfields" class="fields">
             <div class="field"><label for="q-name">Name</label><input id="q-name" autocomplete="name" required></div>
             <div class="field"><label for="q-phone">Phone</label><input id="q-phone" type="tel" autocomplete="tel" required></div>
+            <input type="text" id="q-hp" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
             <div class="field full"><label for="q-email">Email</label><input id="q-email" type="email" autocomplete="email"></div>
             <div class="field"><label for="q-type">Project</label>
               <select id="q-type"><option>Home</option><option>Business / commercial</option><option>Rental property</option></select></div>
@@ -884,11 +885,37 @@ function renderBoard(){
 renderBoard();
 
 // ---------- quote form ----------
-$("qform").addEventListener("submit",e=>{
+const QUOTE_TO="https://formsubmit.co/ajax/mizcorpo@gmail.com";
+$("qform").addEventListener("submit",async e=>{
   e.preventDefault();
-  const name=$("q-name").value.trim(),phone=$("q-phone").value.trim();
+  const name=$("q-name").value.trim(),phone=$("q-phone").value.trim(),email=$("q-email").value.trim();
   if(!name||!phone){$("q-err").textContent="Add your name and phone number so we can reach you.";(name?$("q-phone"):$("q-name")).focus();return}
-  $("q-err").textContent="";$("qfields").hidden=true;$("qdone").hidden=false;
+  if(email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){$("q-err").textContent="Check your email address, or leave it blank.";$("q-email").focus();return}
+  if($("q-hp").value){$("qfields").hidden=true;$("qdone").hidden=false;return}
+  const btn=$("qform").querySelector("button[type=submit]");btn.disabled=true;btn.textContent="Sending…";$("q-err").textContent="";
+  const data={
+    _subject:"New quote request: "+name,
+    _template:"table",
+    _captcha:"false",
+    Name:name,Phone:phone,Email:email||"(not given)",
+    Project:$("q-type").value,Material:$("q-mat").value,
+    "Size (sq ft)":$("q-size").value||"(not given)",ZIP:$("q-zip").value||"(not given)",
+    Details:$("q-msg").value.trim()||"(none)"
+  };
+  if(email)data._replyto=email;
+  try{
+    const r=await fetch(QUOTE_TO,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||String(j.success)!=="true"){
+      if(/activat/i.test(j.message||"")){throw new Error("activation")}
+      throw new Error("failed");
+    }
+    $("qfields").hidden=true;$("qdone").hidden=false;
+  }catch(err){
+    $("q-err").textContent=err.message==="activation"
+      ?"Almost ready: the form must be activated once. Check mizcorpo@gmail.com (and Spam) for an email from FormSubmit and click Activate Form."
+      :"We couldn't send your request. Please call or text us at (786) 319-1149.";
+  }finally{btn.disabled=false;btn.textContent="Request a quote"}
 });
 })();
 </script>
